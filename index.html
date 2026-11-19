@@ -277,7 +277,7 @@
 <div id="auth-screen">
   <h2>Вход в портал</h2>
   <p>Введите логин и пароль. Новый аккаунт создастся автоматически, а весь прогресс сохранится в браузере навсегда.</p>
-  <form id="auth-form" onsubmit="return false;">
+  <form id="auth-form">
     <div class="input-group">
       <label for="login-input">Логин</label>
       <input type="text" id="login-input" placeholder="Например: CyberPlayer" autocomplete="off">
@@ -326,16 +326,13 @@
 const SafeStorage = {
   mem: {},
   get(key) {
-    try {
-      return window.localStorage.getItem(key);
-    } catch (e) {
-      return this.mem[key] || null;
-    }
+    try { return window.localStorage.getItem(key); }
+    catch (e) { return this.mem[key] || null; }
   },
   set(key, val) {
-    try {
-      window.localStorage.setItem(key, val);
-    } catch (e) {
-      this.mem[key] = val;
-    }
+    try { window.localStorage.setItem(key, val); }
+    catch (e) { this.mem[key] = val; }
+  },
+  remove(key) {
+
 
