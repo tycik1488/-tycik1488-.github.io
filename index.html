@@ -5,22 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>NEON ARCADE — Игровой Портал</title>
 <style>
-  :root {
-    --bg: #0b0d17;
-    --card: #141829;
-    --card-hover: #1c223b;
-    --neon-blue: #00f3ff;
-    --neon-pink: #ff007f;
-    --neon-green: #00ff88;
-    --neon-purple: #b537f2;
-    --neon-yellow: #ffe600;
-    --text: #eef2ff;
-    --muted: #8a94b8;
-  }
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; user-select: none; }
   body {
-    background: radial-gradient(circle at top, #161b33 0%, var(--bg) 70%);
-    color: var(--text);
+    background: radial-gradient(circle at top, #161b33 0%, #0b0d17 70%);
+    color: #eef2ff;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -35,15 +23,13 @@
     justify-content: space-between;
     align-items: center;
     gap: 12px;
-    border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+    border-bottom: 1px solid rgba(0, 243, 255, 0.25);
   }
   .logo {
     font-size: 1.6rem;
     font-weight: 900;
     letter-spacing: 2px;
-    background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #00f3ff;
     cursor: pointer;
   }
   .controls-bar {
@@ -54,88 +40,81 @@
   }
   .badge {
     background: rgba(0, 255, 136, 0.12);
-    border: 1px solid var(--neon-green);
-    color: var(--neon-green);
+    border: 1px solid #00ff88;
+    color: #00ff88;
     padding: 6px 14px;
     border-radius: 20px;
     font-weight: 700;
     font-size: 0.95rem;
-    box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
   }
   .user-pill {
     background: rgba(0, 243, 255, 0.12);
-    border: 1px solid var(--neon-blue);
-    color: var(--neon-blue);
+    border: 1px solid #00f3ff;
+    color: #00f3ff;
     padding: 6px 14px;
     border-radius: 20px;
     font-weight: 600;
     font-size: 0.95rem;
   }
   button {
-    background: var(--card);
-    color: var(--text);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: #141829;
+    color: #eef2ff;
+    border: 1px solid rgba(255, 255, 255, 0.25);
     padding: 8px 16px;
     border-radius: 10px;
     cursor: pointer;
     font-weight: 600;
-    transition: all 0.2s;
   }
   button:hover {
-    border-color: var(--neon-blue);
+    border-color: #00f3ff;
     box-shadow: 0 0 12px rgba(0, 243, 255, 0.4);
-    transform: translateY(-1px);
   }
   button.danger {
-    border-color: var(--neon-pink);
-    color: var(--neon-pink);
+    border-color: #ff007f;
+    color: #ff007f;
   }
 
-  /* Main Menu Grid */
   #menu-screen {
     width: 100%;
     max-width: 1100px;
     padding: 28px 20px;
-    display: block;
   }
   .menu-title { text-align: center; margin-bottom: 24px; }
   .menu-title h1 { font-size: 2rem; margin-bottom: 6px; }
-  .menu-title p { color: var(--muted); }
+  .menu-title p { color: #8a94b8; }
   .games-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
     gap: 18px;
   }
   .game-card {
-    background: var(--card);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #141829;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 18px;
     padding: 20px;
     text-align: center;
     cursor: pointer;
-    transition: all 0.25s;
+    transition: transform 0.2s, border-color 0.2s;
   }
   .game-card:hover {
-    background: var(--card-hover);
-    border-color: var(--neon-blue);
+    background: #1c223b;
+    border-color: #00f3ff;
     transform: translateY(-4px);
-    box-shadow: 0 10px 25px rgba(0, 243, 255, 0.2);
   }
   .game-icon { font-size: 2.8rem; margin-bottom: 10px; display: block; }
   .game-card h3 { font-size: 1.2rem; margin-bottom: 6px; }
-  .game-card .desc { font-size: 0.82rem; color: var(--muted); margin-bottom: 12px; min-height: 34px; }
+  .game-card .desc { font-size: 0.85rem; color: #8a94b8; margin-bottom: 12px; min-height: 36px; }
   .game-card .record-tag {
     display: inline-block;
-    background: rgba(181, 55, 242, 0.15);
-    border: 1px solid var(--neon-purple);
+    background: rgba(181, 55, 242, 0.18);
+    border: 1px solid #b537f2;
     color: #e0aaff;
-    font-size: 0.8rem;
-    padding: 4px 10px;
+    font-size: 0.85rem;
+    padding: 4px 12px;
     border-radius: 12px;
     font-weight: 600;
   }
 
-  /* Game Stage */
   #game-screen {
     display: none;
     flex-direction: column;
@@ -150,18 +129,16 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 14px;
-    background: var(--card);
+    background: #141829;
     padding: 12px 18px;
     border-radius: 14px;
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.12);
   }
-  .score-box { font-size: 1.1rem; font-weight: 700; color: var(--neon-yellow); }
+  .score-box { font-size: 1.1rem; font-weight: 700; color: #ffe600; }
   #canvas-wrapper {
-    position: relative;
     background: #070911;
-    border: 2px solid var(--neon-blue);
+    border: 2px solid #00f3ff;
     border-radius: 14px;
-    box-shadow: 0 0 25px rgba(0, 243, 255, 0.2);
     overflow: hidden;
     display: flex;
     justify-content: center;
@@ -169,7 +146,7 @@
   }
   canvas { display: block; max-width: 100%; touch-action: none; }
   #html-board { display: none; padding: 16px; }
-  .hint-text { margin-top: 12px; color: var(--muted); font-size: 0.9rem; text-align: center; }
+  .hint-text { margin-top: 12px; color: #8a94b8; font-size: 0.9rem; text-align: center; }
 
   .mobile-controls {
     display: none;
@@ -178,46 +155,15 @@
     flex-wrap: wrap;
     justify-content: center;
   }
-  .mobile-controls button {
-    padding: 14px 20px;
-    font-size: 1.2rem;
-    background: var(--card);
-    border: 1px solid var(--neon-blue);
-  }
-  @media (max-width: 768px) {
-    .mobile-controls.active { display: flex; }
-  }
+  .mobile-controls button { padding: 14px 20px; font-size: 1.2rem; border-color: #00f3ff; }
+  @media (max-width: 768px) { .mobile-controls.active { display: flex; } }
 
-  .grid-2048 {
-    display: grid;
-    grid-template-columns: repeat(4, 72px);
-    gap: 8px;
-    background: #141829;
-    padding: 10px;
-    border-radius: 12px;
-  }
-  .cell-2048 {
-    width: 72px; height: 72px;
-    background: #1e243d;
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.4rem; font-weight: 800; color: #fff;
-  }
-  .grid-mine {
-    display: grid;
-    grid-template-columns: repeat(10, 32px);
-    gap: 3px;
-  }
-  .cell-mine {
-    width: 32px; height: 32px;
-    background: #1e243d;
-    border: 1px solid rgba(0,243,255,0.25);
-    border-radius: 5px;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 800; font-size: 0.95rem; cursor: pointer;
-  }
+  .grid-2048 { display: grid; grid-template-columns: repeat(4, 72px); gap: 8px; background: #141829; padding: 10px; border-radius: 12px; }
+  .cell-2048 { width: 72px; height: 72px; background: #1e243d; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 800; }
+  .grid-mine { display: grid; grid-template-columns: repeat(10, 32px); gap: 3px; }
+  .cell-mine { width: 32px; height: 32px; background: #1e243d; border: 1px solid rgba(0,243,255,0.25); border-radius: 5px; display: flex; align-items: center; justify-content: center; font-weight: 800; cursor: pointer; }
   .cell-mine.open { background: #0e1220; border-color: rgba(255,255,255,0.08); cursor: default; }
-  .cell-mine.flag { background: rgba(255,0,127,0.2); color: var(--neon-pink); }
+  .cell-mine.flag { background: rgba(255,0,127,0.2); color: #ff007f; }
 </style>
 </head>
 <body>
@@ -237,7 +183,56 @@
     <h1>Выберите мини-игру</h1>
     <p>1 очко нового рекорда в любой игре = +1 балл в общий профиль</p>
   </div>
-  <div class="games-grid" id="games-grid"></div>
+  <div class="games-grid">
+    <div class="game-card" onclick="launchGame('snake')">
+      <span class="game-icon">🐍</span>
+      <h3>Змейка</h3>
+      <p class="desc">Прохождение сквозь стены. Собирайте энергию!</p>
+      <span class="record-tag">Рекорд: <b id="rec-snake">0</b></span>
+    </div>
+    <div class="game-card" onclick="launchGame('tetris')">
+      <span class="game-icon">🧱</span>
+      <h3>Тетрис</h3>
+      <p class="desc">Классическая укладка неоновых блоков.</p>
+      <span class="record-tag">Рекорд: <b id="rec-tetris">0</b></span>
+    </div>
+    <div class="game-card" onclick="launchGame('arkanoid')">
+      <span class="game-icon">🏓</span>
+      <h3>Арканоид</h3>
+      <p class="desc">Плавный темп. Двигайте платформу мышкой!</p>
+      <span class="record-tag">Рекорд: <b id="rec-arkanoid">0</b></span>
+    </div>
+    <div class="game-card" onclick="launchGame('flappy')">
+      <span class="game-icon">🐤</span>
+      <h3>Flappy Bird</h3>
+      <p class="desc">Размеренный полет между неоновыми трубами.</p>
+      <span class="record-tag">Рекорд: <b id="rec-flappy">0</b></span>
+    </div>
+    <div class="game-card" onclick="launchGame('shooter')">
+      <span class="game-icon">🚀</span>
+      <h3>Космошутер</h3>
+      <p class="desc">Спокойная оборона галактики от захватчиков.</p>
+      <span class="record-tag">Рекорд: <b id="rec-shooter">0</b></span>
+    </div>
+    <div class="game-card" onclick="launchGame('pong')">
+      <span class="game-icon">🎾</span>
+      <h3>Пинг-Понг</h3>
+      <p class="desc">Дуэль против ИИ. Управление курсором мыши!</p>
+      <span class="record-tag">Рекорд: <b id="rec-pong">0</b></span>
+    </div>
+    <div class="game-card" onclick="launchGame('g2048')">
+      <span class="game-icon">🔢</span>
+      <h3>2048</h3>
+      <p class="desc">Соединяйте плитки и наберите максимум очков.</p>
+      <span class="record-tag">Рекорд: <b id="rec-g2048">0</b></span>
+    </div>
+    <div class="game-card" onclick="launchGame('mines')">
+      <span class="game-icon">💣</span>
+      <h3>Сапер</h3>
+      <p class="desc">Разминируйте поле и получайте очки за клетки.</p>
+      <span class="record-tag">Рекорд: <b id="rec-mines">0</b></span>
+    </div>
+  </div>
 </div>
 
 <div id="game-screen">
@@ -261,83 +256,51 @@
 </div>
 
 <script>
-// ================= 1. ОБЩИЙ ПРОФИЛЬ И СОХРАНЕНИЕ =================
-var PROFILE_KEY = 'neon_arcade_shared_profile_v1';
+var PROFILE_KEY = 'neon_arcade_open_v2';
 var profile = { points: 0, records: {} };
 
 try {
-  var saved = localStorage.getItem(PROFILE_KEY);
-  if (saved) {
-    var parsed = JSON.parse(saved);
-    if (parsed && typeof parsed.points === 'number') {
-      profile = parsed;
-    }
+  var raw = localStorage.getItem(PROFILE_KEY);
+  if (raw) {
+    var data = JSON.parse(raw);
+    if (data && typeof data.points === 'number') profile = data;
   }
 } catch (e) {}
 
 function saveProfile() {
-  try {
-    localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
-  } catch (e) {}
+  try { localStorage.setItem(PROFILE_KEY, JSON.stringify(profile)); } catch (e) {}
 }
 
-function updateHeaderStats() {
+function updateStatsUI() {
   document.getElementById('display-points').textContent = profile.points;
+  var ids = ['snake', 'tetris', 'arkanoid', 'flappy', 'shooter', 'pong', 'g2048', 'mines'];
+  for (var i = 0; i < ids.length; i++) {
+    var el = document.getElementById('rec-' + ids[i]);
+    if (el) el.textContent = profile.records[ids[i]] || 0;
+  }
 }
 
 function registerScore(gameId, score) {
   document.getElementById('current-score').textContent = score;
-  var prevBest = profile.records[gameId] || 0;
-  if (score > prevBest) {
-    profile.points += (score - prevBest);
+  var prev = profile.records[gameId] || 0;
+  if (score > prev) {
+    profile.points += (score - prev);
     profile.records[gameId] = score;
     saveProfile();
-    updateHeaderStats();
+    updateStatsUI();
     document.getElementById('best-score').textContent = score;
   }
 }
 
 function resetProgress() {
-  if (confirm('Сбросить все баллы и рекорды общего профиля?')) {
+  if (confirm('Сбросить все баллы и рекорды?')) {
     profile = { points: 0, records: {} };
     saveProfile();
-    updateHeaderStats();
-    goMenu();
+    updateStatsUI();
   }
 }
 
-// ================= 2. ЗВУКОВОЙ ДВИЖОК =================
+// Звук
 var soundEnabled = true;
 var audioCtx = null;
 
-function toggleSound() {
-  soundEnabled = !soundEnabled;
-  document.getElementById('sound-btn').textContent = soundEnabled ? '🔊 Звук: ВКЛ' : '🔇 Звук: ВЫКЛ';
-}
-
-function playTone(freq, type, duration, vol) {
-  if (!soundEnabled) return;
-  try {
-    if (!audioCtx) {
-      var AC = window.AudioContext || window.webkitAudioContext;
-      if (AC) audioCtx = new AC();
-    }
-    if (!audioCtx) return;
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    var osc = audioCtx.createOscillator();
-    var gain = audioCtx.createGain();
-    osc.type = type || 'sine';
-    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-    gain.gain.setValueAtTime(vol || 0.12, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + (duration || 0.1));
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    osc.start();
-    osc.stop(audioCtx.currentTime + (duration || 0.1));
-  } catch (e) {}
-}
-
-var sfx = {
-  jump: function() { playTone(420, 'square', 0.12, 0.1); },
-  score: function() { playTone(600, 'sine', 0.08, 0.12); setTimeout(function() { playTone(850, 'sine', 0.12, 0.12); }, 70); },
-  hit: function() { playTone(260, 'triangle', 0.08, 0.12); },
