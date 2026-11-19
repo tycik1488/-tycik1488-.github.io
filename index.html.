@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>NEON ARCADE — Игровой Портал</title>
+<style>
+  :root {
+    --bg: #0b0d17;
+    --card: #141829;
+    --card-hover: #1c223b;
+    --neon-blue: #00f3ff;
+    --neon-pink: #ff007f;
+    --neon-green: #00ff88;
+    --neon-purple: #b537f2;
+    --neon-yellow: #ffe600;
+    --text: #eef2ff;
+    --muted: #8a94b8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; user-select: none; }
+  body {
+    background: radial-gradient(circle at top, #161b33 0%, var(--bg) 70%);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  header {
+    width: 100%;
+    max-width: 1100px;
+    padding: 16px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+  }
+  .logo {
+    font-size: 1.6rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+    cursor: pointer;
+  }
+  .controls-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    background: rgba(0, 255, 136, 0.12);
+    border: 1px solid var(--neon-green);
+    color: var(--neon-green);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+  }
+  .user-pill {
+    background: rgba(0, 243, 255, 0.12);
+    border: 1px solid var(--neon-blue);
+    color: var(--neon-blue);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  button {
+    background: var(--card);
+    color: var(--text);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 8px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  button:hover {
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 12px rgba(0, 243, 255, 0.4);
+    transform: translateY(-1px);
+  }
+  button.primary {
+    background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+    border: none;
+    color: #05070e;
+    font-weight: 800;
+  }
+  button.danger {
+    border-color: var(--neon-pink);
+    color: var(--neon-pink);
+  }
+
+  /* Auth Screen */
+  #auth-screen {
+    margin: auto;
+    background: var(--card);
+    border: 1px solid rgba(0, 243, 255, 0.3);
+    box-shadow: 0 0 30px rgba(0, 243, 255, 0.15);
+    padding: 32px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+  }
+  #auth-screen h2 { margin-bottom: 8px; color: var(--neon-blue); }
+  #auth-screen p { color: var(--muted); font-size: 0.9rem; margin-bottom: 20px; }
+  .input-group { margin-bottom: 14px; text-align: left; }
+  .input-group label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 5px; }
+  .input-group input {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: #0b0d17;
+    color: #fff;
+    font-size: 1rem;
+    outline: none;
+  }
+  .input-group input:focus { border-color: var(--neon-blue); }
+  #auth-error { color: var(--neon-pink); font-size: 0.85rem; margin-bottom: 12px; min-height: 18px; }
+
+  /* Main Menu Grid */
+  #menu-screen {
+    width: 100%;
+    max-width: 1100px;
+    padding: 28px 20px;
+    display: none;
+  }
+  .menu-title { text-align: center; margin-bottom: 24px; }
+  .menu-title h1 { font-size: 2rem; margin-bottom: 6px; }
+  .menu-title p { color: var(--muted); }
+  .games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 18px;
+  }
+  .game-card {
+    background: var(--card);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .game-card:hover {
+    background: var(--card-hover);
+    border-color: var(--neon-blue);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0, 243, 255, 0.2);
+  }
+  .game-icon { font-size: 2.8rem; margin-bottom: 10px; display: block; }
+  .game-card h3 { font-size: 1.2rem; margin-bottom: 6px; }
+  .game-card .desc { font-size: 0.82rem; color: var(--muted); margin-bottom: 12px; min-height: 34px; }
+  .game-card .record-tag {
+    display: inline-block;
+    background: rgba(181, 55, 242, 0.15);
+    border: 1px solid var(--neon-purple);
+    color: #e0aaff;
+    font-size: 0.8rem;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+  }
+
+  /* Game Stage */
+  #game-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 700px;
+    padding: 20px;
+  }
+  .stage-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    background: var(--card);
+    padding: 12px 18px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .score-box { font-size: 1.1rem; font-weight: 700; color: var(--neon-yellow); }
+  #canvas-wrapper {
+    position: relative;
+    background: #070911;
+    border: 2px solid var(--neon-blue);
+    border-radius: 14px;
+    box-shadow: 0 0 25px rgba(0, 243, 255, 0.2);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  canvas { display: block; max-width: 100%; touch-action: none; }
+  #html-board { display: none; padding: 16px; }
+  .hint-text { margin-top: 12px; color: var(--muted); font-size: 0.9rem; text-align: center; }
+
+  /* Mobile D-Pad */
+  .mobile-controls {
+    display: none;
+    margin-top: 14px;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .mobile-controls button {
+    padding: 14px 20px;
+    font-size: 1.2rem;
+    background: var(--card);
+    border: 1px solid var(--neon-blue);
+  }
+  @media (max-width: 768px) {
+    .mobile-controls.active { display: flex; }
+  }
+
+  /* 2048 & Minesweeper Grids */
+  .grid-2048 {
+    display: grid;
+    grid-template-columns: repeat(4, 72px);
+    gap: 8px;
+    background: #141829;
+    padding: 10px;
+    border-radius: 12px;
+  }
+  .cell-2048 {
+    width: 72px; height: 72px;
+    background: #1e243d;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; font-weight: 800; color: #fff;
+  }
+  .grid-mine {
+    display: grid;
+    grid-template-columns: repeat(10, 32px);
+    gap: 3px;
+  }
+  .cell-mine {
+    width: 32px; height: 32px;
+    background: #1e243d;
+    border: 1px solid rgba(0,243,255,0.25);
+    border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 0.95rem; cursor: pointer;
+  }
+  .cell-mine.open { background: #0e1220; border-color: rgba(255,255,255,0.08); cursor: default; }
+  .cell-mine.flag { background: rgba(255,0,127,0.2); color: var(--neon-pink); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo" onclick="goMenu()">⚡ NEON ARCADE</div>
+  <div class="controls-bar" id="header-controls" style="display:none;">
+    <span class="user-pill" id="display-user">👤 Игрок</span>
+    <span class="badge">💎 Баллы: <span id="display-points">0</span></span>
+    <button id="sound-btn" onclick="toggleSound()">🔊 Звук: ВКЛ</button>
+    <button class="danger" onclick="logout()">Выйти</button>
+  </div>
+</header>
+
+<!-- Экран авторизации -->
+<div id="auth-screen">
+  <h2>Вход в портал</h2>
+  <p>Введите логин и пароль. Новый аккаунт создастся автоматически, а весь прогресс сохранится в браузере навсегда.</p>
+  <div class="input-group">
+    <label>Логин</label>
+    <input type="text" id="login-input" placeholder="Например: CyberPlayer" autocomplete="off">
+  </div>
+  <div class="input-group">
+    <label>Пароль</label>
+    <input type="password" id="pass-input" placeholder="Введите пароль">
+  </div>
+  <div id="auth-error"></div>
+  <button class="primary" style="width:100%; padding:12px;" onclick="handleAuth()">Войти / Создать профиль</button>
+</div>
+
+<!-- Главное меню -->
+<div id="menu-screen">
+  <div class="menu-title">
+    <h1>Выберите мини-игру</h1>
+    <p>1 очко нового рекорда в любой игре = +1 балл на ваш счет</p>
+  </div>
+  <div class="games-grid" id="games-grid"></div>
+</div>
+
+<!-- Игровая сцена -->
+<div id="game-screen">
+  <div class="stage-header">
+    <button onclick="goMenu()">⬅ В меню</button>
+    <strong id="active-game-title">Игра</strong>
+    <div class="score-box">Счёт: <span id="current-score">0</span> | Рекорд: <span id="best-score">0</span></div>
+  </div>
+  <div id="canvas-wrapper">
+    <canvas id="game-canvas" width="480" height="520"></canvas>
+    <div id="html-board"></div>
+  </div>
+  <div class="hint-text" id="game-hint"></div>
+  <div class="mobile-controls" id="mobile-controls">
+    <button onclick="sendKey('ArrowLeft')">◀</button>
+    <button onclick="sendKey('ArrowUp')">▲</button>
+    <button onclick="sendKey('ArrowDown')">▼</button>
+    <button onclick="sendKey('ArrowRight')">▶</button>
+    <button onclick="sendKey(' ')">●</button>
+  </div>
+</div>
+
+<script>
+// ================= ЗВУКОВОЙ ДВИЖОК (Web Audio API) =================
+let soundEnabled = true;
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+function toggleSound() {
+  soundEnabled = !soundEnabled;
+  document.getElementById('sound-btn').textContent = soundEnabled ? '🔊 Звук: ВКЛ' : '🔇 Звук: ВЫКЛ';
+}
+
+function playTone(freq, type = 'sine', duration = 0.1, vol = 0.12) {
+  if (!soundEnabled) return;
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
