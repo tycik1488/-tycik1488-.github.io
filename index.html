@@ -123,6 +123,7 @@
     color: #fff;
     font-size: 1rem;
     outline: none;
+    user-select: text;
   }
   .input-group input:focus { border-color: var(--neon-blue); }
   #auth-error { color: var(--neon-pink); font-size: 0.85rem; margin-bottom: 12px; min-height: 18px; }
@@ -263,12 +264,12 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goMenu()">⚡ NEON ARCADE</div>
+  <div class="logo" id="logo-btn">⚡ NEON ARCADE</div>
   <div class="controls-bar" id="header-controls" style="display:none;">
     <span class="user-pill" id="display-user">👤 Игрок</span>
     <span class="badge">💎 Баллы: <span id="display-points">0</span></span>
-    <button id="sound-btn" onclick="toggleSound()">🔊 Звук: ВКЛ</button>
-    <button class="danger" onclick="logout()">Выйти</button>
+    <button type="button" id="sound-btn">🔊 Звук: ВКЛ</button>
+    <button type="button" class="danger" id="logout-btn">Выйти</button>
   </div>
 </header>
 
@@ -276,16 +277,18 @@
 <div id="auth-screen">
   <h2>Вход в портал</h2>
   <p>Введите логин и пароль. Новый аккаунт создастся автоматически, а весь прогресс сохранится в браузере навсегда.</p>
-  <div class="input-group">
-    <label>Логин</label>
-    <input type="text" id="login-input" placeholder="Например: CyberPlayer" autocomplete="off">
-  </div>
-  <div class="input-group">
-    <label>Пароль</label>
-    <input type="password" id="pass-input" placeholder="Введите пароль">
-  </div>
-  <div id="auth-error"></div>
-  <button class="primary" style="width:100%; padding:12px;" onclick="handleAuth()">Войти / Создать профиль</button>
+  <form id="auth-form" onsubmit="return false;">
+    <div class="input-group">
+      <label for="login-input">Логин</label>
+      <input type="text" id="login-input" placeholder="Например: CyberPlayer" autocomplete="off">
+    </div>
+    <div class="input-group">
+      <label for="pass-input">Пароль</label>
+      <input type="password" id="pass-input" placeholder="Введите пароль">
+    </div>
+    <div id="auth-error"></div>
+    <button type="submit" id="auth-submit-btn" class="primary" style="width:100%; padding:12px;">Войти / Создать профиль</button>
+  </form>
 </div>
 
 <!-- Главное меню -->
@@ -300,7 +303,7 @@
 <!-- Игровая сцена -->
 <div id="game-screen">
   <div class="stage-header">
-    <button onclick="goMenu()">⬅ В меню</button>
+    <button type="button" id="back-menu-btn">⬅ В меню</button>
     <strong id="active-game-title">Игра</strong>
     <div class="score-box">Счёт: <span id="current-score">0</span> | Рекорд: <span id="best-score">0</span></div>
   </div>
@@ -310,26 +313,29 @@
   </div>
   <div class="hint-text" id="game-hint"></div>
   <div class="mobile-controls" id="mobile-controls">
-    <button onclick="sendKey('ArrowLeft')">◀</button>
-    <button onclick="sendKey('ArrowUp')">▲</button>
-    <button onclick="sendKey('ArrowDown')">▼</button>
-    <button onclick="sendKey('ArrowRight')">▶</button>
-    <button onclick="sendKey(' ')">●</button>
+    <button type="button" onclick="sendKey('ArrowLeft')">◀</button>
+    <button type="button" onclick="sendKey('ArrowUp')">▲</button>
+    <button type="button" onclick="sendKey('ArrowDown')">▼</button>
+    <button type="button" onclick="sendKey('ArrowRight')">▶</button>
+    <button type="button" onclick="sendKey(' ')">●</button>
   </div>
 </div>
 
 <script>
-// ================= ЗВУКОВОЙ ДВИЖОК (Web Audio API) =================
-let soundEnabled = true;
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+// ================= БЕЗОПАСНОЕ ХРАНИЛИЩЕ =================
+const SafeStorage = {
+  mem: {},
+  get(key) {
+    try {
+      return window.localStorage.getItem(key);
+    } catch (e) {
+      return this.mem[key] || null;
+    }
+  },
+  set(key, val) {
+    try {
+      window.localStorage.setItem(key, val);
+    } catch (e) {
+      this.mem[key] = val;
+    }
 
-function toggleSound() {
-  soundEnabled = !soundEnabled;
-  document.getElementById('sound-btn').textContent = soundEnabled ? '🔊 Звук: ВКЛ' : '🔇 Звук: ВЫКЛ';
-}
-
-function playTone(freq, type = 'sine', duration = 0.1, vol = 0.12) {
-  if (!soundEnabled) return;
-  if (audioCtx.state === 'suspended') audioCtx.resume();
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
