@@ -60,6 +60,7 @@
     border-radius: 20px;
     font-weight: 700;
     font-size: 0.95rem;
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
   }
   .user-pill {
     background: rgba(0, 243, 255, 0.12);
@@ -83,52 +84,19 @@
   button:hover {
     border-color: var(--neon-blue);
     box-shadow: 0 0 12px rgba(0, 243, 255, 0.4);
-  }
-  button.primary {
-    background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
-    border: none;
-    color: #05070e;
-    font-weight: 800;
+    transform: translateY(-1px);
   }
   button.danger {
     border-color: var(--neon-pink);
     color: var(--neon-pink);
   }
 
-  #auth-screen {
-    margin: auto;
-    background: var(--card);
-    border: 1px solid rgba(0, 243, 255, 0.3);
-    box-shadow: 0 0 30px rgba(0, 243, 255, 0.15);
-    padding: 32px;
-    border-radius: 20px;
-    width: 90%;
-    max-width: 400px;
-    text-align: center;
-  }
-  #auth-screen h2 { margin-bottom: 8px; color: var(--neon-blue); }
-  #auth-screen p { color: var(--muted); font-size: 0.9rem; margin-bottom: 20px; }
-  .input-group { margin-bottom: 14px; text-align: left; }
-  .input-group label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 5px; }
-  .input-group input {
-    width: 100%;
-    padding: 10px 14px;
-    border-radius: 10px;
-    border: 1px solid rgba(255,255,255,0.15);
-    background: #0b0d17;
-    color: #fff;
-    font-size: 1rem;
-    outline: none;
-    user-select: text;
-  }
-  .input-group input:focus { border-color: var(--neon-blue); }
-  #auth-error { color: var(--neon-pink); font-size: 0.85rem; margin-bottom: 12px; min-height: 18px; }
-
+  /* Main Menu Grid */
   #menu-screen {
     width: 100%;
     max-width: 1100px;
     padding: 28px 20px;
-    display: none;
+    display: block;
   }
   .menu-title { text-align: center; margin-bottom: 24px; }
   .menu-title h1 { font-size: 2rem; margin-bottom: 6px; }
@@ -167,6 +135,7 @@
     font-weight: 600;
   }
 
+  /* Game Stage */
   #game-screen {
     display: none;
     flex-direction: column;
@@ -254,41 +223,26 @@
 <body>
 
 <header>
-  <div class="logo" id="logo-btn">⚡ NEON ARCADE</div>
-  <div class="controls-bar" id="header-controls" style="display:none;">
-    <span class="user-pill" id="display-user">👤 Игрок</span>
+  <div class="logo" onclick="goMenu()">⚡ NEON ARCADE</div>
+  <div class="controls-bar">
+    <span class="user-pill">👤 Общий профиль</span>
     <span class="badge">💎 Баллы: <span id="display-points">0</span></span>
-    <button type="button" id="sound-btn">🔊 Звук: ВКЛ</button>
-    <button type="button" class="danger" id="logout-btn">Выйти</button>
+    <button type="button" id="sound-btn" onclick="toggleSound()">🔊 Звук: ВКЛ</button>
+    <button type="button" class="danger" onclick="resetProgress()">Сброс</button>
   </div>
 </header>
-
-<div id="auth-screen">
-  <h2>Вход в портал</h2>
-  <p>Введите логин и пароль. Новый аккаунт создастся автоматически, а весь прогресс сохранится в браузере навсегда.</p>
-  <div class="input-group">
-    <label for="login-input">Логин</label>
-    <input type="text" id="login-input" placeholder="Например: CyberPlayer" autocomplete="off">
-  </div>
-  <div class="input-group">
-    <label for="pass-input">Пароль</label>
-    <input type="password" id="pass-input" placeholder="Введите пароль">
-  </div>
-  <div id="auth-error"></div>
-  <button type="button" id="auth-submit-btn" class="primary" style="width:100%; padding:12px;">Войти / Создать профиль</button>
-</div>
 
 <div id="menu-screen">
   <div class="menu-title">
     <h1>Выберите мини-игру</h1>
-    <p>1 очко нового рекорда в любой игре = +1 балл на ваш счет</p>
+    <p>1 очко нового рекорда в любой игре = +1 балл в общий профиль</p>
   </div>
   <div class="games-grid" id="games-grid"></div>
 </div>
 
 <div id="game-screen">
   <div class="stage-header">
-    <button type="button" id="back-menu-btn">⬅ В меню</button>
+    <button type="button" onclick="goMenu()">⬅ В меню</button>
     <strong id="active-game-title">Игра</strong>
     <div class="score-box">Счёт: <span id="current-score">0</span> | Рекорд: <span id="best-score">0</span></div>
   </div>
@@ -298,37 +252,92 @@
   </div>
   <div class="hint-text" id="game-hint"></div>
   <div class="mobile-controls" id="mobile-controls">
-    <button type="button" id="m-left">◀</button>
-    <button type="button" id="m-up">▲</button>
-    <button type="button" id="m-down">▼</button>
-    <button type="button" id="m-right">▶</button>
-    <button type="button" id="m-act">●</button>
+    <button type="button" onclick="sendKey('ArrowLeft')">◀</button>
+    <button type="button" onclick="sendKey('ArrowUp')">▲</button>
+    <button type="button" onclick="sendKey('ArrowDown')">▼</button>
+    <button type="button" onclick="sendKey('ArrowRight')">▶</button>
+    <button type="button" onclick="sendKey(' ')">●</button>
   </div>
 </div>
 
 <script>
-// ================= 1. ХРАНИЛИЩЕ И АККАУНТЫ =================
-const SafeStorage = {
-  mem: {},
-  get(k) { try { return localStorage.getItem(k); } catch (e) { return this.mem[k] || null; } },
-  set(k, v) { try { localStorage.setItem(k, v); } catch (e) { this.mem[k] = v; } },
-  del(k) { try { localStorage.removeItem(k); } catch (e) { delete this.mem[k]; } }
-};
+// ================= 1. ОБЩИЙ ПРОФИЛЬ И СОХРАНЕНИЕ =================
+var PROFILE_KEY = 'neon_arcade_shared_profile_v1';
+var profile = { points: 0, records: {} };
 
-const DB_KEY = 'neon_arcade_db_v4';
-const SESS_KEY = 'neon_arcade_sess_v4';
-let usersDB = {};
-try { usersDB = JSON.parse(SafeStorage.get(DB_KEY) || '{}'); } catch (e) { usersDB = {}; }
-let currentUser = null;
+try {
+  var saved = localStorage.getItem(PROFILE_KEY);
+  if (saved) {
+    var parsed = JSON.parse(saved);
+    if (parsed && typeof parsed.points === 'number') {
+      profile = parsed;
+    }
+  }
+} catch (e) {}
 
-function saveDB() {
-  SafeStorage.set(DB_KEY, JSON.stringify(usersDB));
+function saveProfile() {
+  try {
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+  } catch (e) {}
 }
 
-function handleAuth() {
-  const login = document.getElementById('login-input').value.trim();
-  const pass = document.getElementById('pass-input').value.trim();
-  const err = document.getElementById('auth-error');
+function updateHeaderStats() {
+  document.getElementById('display-points').textContent = profile.points;
+}
 
-  if (!login || !pass) {
+function registerScore(gameId, score) {
+  document.getElementById('current-score').textContent = score;
+  var prevBest = profile.records[gameId] || 0;
+  if (score > prevBest) {
+    profile.points += (score - prevBest);
+    profile.records[gameId] = score;
+    saveProfile();
+    updateHeaderStats();
+    document.getElementById('best-score').textContent = score;
+  }
+}
 
+function resetProgress() {
+  if (confirm('Сбросить все баллы и рекорды общего профиля?')) {
+    profile = { points: 0, records: {} };
+    saveProfile();
+    updateHeaderStats();
+    goMenu();
+  }
+}
+
+// ================= 2. ЗВУКОВОЙ ДВИЖОК =================
+var soundEnabled = true;
+var audioCtx = null;
+
+function toggleSound() {
+  soundEnabled = !soundEnabled;
+  document.getElementById('sound-btn').textContent = soundEnabled ? '🔊 Звук: ВКЛ' : '🔇 Звук: ВЫКЛ';
+}
+
+function playTone(freq, type, duration, vol) {
+  if (!soundEnabled) return;
+  try {
+    if (!audioCtx) {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (AC) audioCtx = new AC();
+    }
+    if (!audioCtx) return;
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    var osc = audioCtx.createOscillator();
+    var gain = audioCtx.createGain();
+    osc.type = type || 'sine';
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gain.gain.setValueAtTime(vol || 0.12, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + (duration || 0.1));
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + (duration || 0.1));
+  } catch (e) {}
+}
+
+var sfx = {
+  jump: function() { playTone(420, 'square', 0.12, 0.1); },
+  score: function() { playTone(600, 'sine', 0.08, 0.12); setTimeout(function() { playTone(850, 'sine', 0.12, 0.12); }, 70); },
+  hit: function() { playTone(260, 'triangle', 0.08, 0.12); },
