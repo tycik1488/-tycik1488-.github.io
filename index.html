@@ -7,8 +7,8 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; user-select: none; }
   body {
-    background: radial-gradient(circle at top, #161b33 0%, #0b0d17 70%);
-    color: #eef2ff;
+    background: radial-gradient(circle at top, #181e38 0%, #090b14 75%);
+    color: #f0f4ff;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -32,88 +32,111 @@
     color: #00f3ff;
     cursor: pointer;
   }
-  .controls-bar {
+  .top-bar {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     flex-wrap: wrap;
   }
-  .badge {
-    background: rgba(0, 255, 136, 0.12);
-    border: 1px solid #00ff88;
-    color: #00ff88;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-weight: 700;
-    font-size: 0.95rem;
-  }
-  .user-pill {
+  .pill {
     background: rgba(0, 243, 255, 0.12);
     border: 1px solid #00f3ff;
     color: #00f3ff;
     padding: 6px 14px;
     border-radius: 20px;
     font-weight: 600;
+    font-size: 0.9rem;
+  }
+  .points-pill {
+    background: rgba(0, 255, 136, 0.14);
+    border: 1px solid #00ff88;
+    color: #00ff88;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 800;
     font-size: 0.95rem;
   }
   button {
-    background: #141829;
-    color: #eef2ff;
+    background: #151a2e;
+    color: #f0f4ff;
     border: 1px solid rgba(255, 255, 255, 0.25);
-    padding: 8px 16px;
+    padding: 8px 14px;
     border-radius: 10px;
     cursor: pointer;
     font-weight: 600;
+    font-size: 0.9rem;
   }
   button:hover {
     border-color: #00f3ff;
-    box-shadow: 0 0 12px rgba(0, 243, 255, 0.4);
+    box-shadow: 0 0 12px rgba(0, 243, 255, 0.35);
   }
   button.danger {
     border-color: #ff007f;
     color: #ff007f;
   }
-  #menu-screen {
+
+  #menu-view {
     width: 100%;
     max-width: 1100px;
     padding: 28px 20px;
   }
-  .menu-title { text-align: center; margin-bottom: 24px; }
-  .menu-title h1 { font-size: 2rem; margin-bottom: 6px; }
-  .menu-title p { color: #8a94b8; }
-  .games-grid {
+  .hero {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-size: 2rem;
+    margin-bottom: 6px;
+  }
+  .hero p {
+    color: #8f9bc2;
+  }
+  .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
     gap: 18px;
   }
-  .game-card {
-    background: #141829;
+  .card {
+    background: #14192d;
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 18px;
     padding: 20px;
     text-align: center;
     cursor: pointer;
-    transition: transform 0.2s, border-color 0.2s;
+    transition: transform 0.2s, border-color 0.2s, background 0.2s;
   }
-  .game-card:hover {
-    background: #1c223b;
+  .card:hover {
+    background: #1c2340;
     border-color: #00f3ff;
     transform: translateY(-4px);
   }
-  .game-icon { font-size: 2.8rem; margin-bottom: 10px; display: block; }
-  .game-card h3 { font-size: 1.2rem; margin-bottom: 6px; }
-  .game-card .desc { font-size: 0.85rem; color: #8a94b8; margin-bottom: 12px; min-height: 36px; }
-  .game-card .record-tag {
+  .card-icon {
+    font-size: 2.8rem;
+    display: block;
+    margin-bottom: 10px;
+  }
+  .card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 6px;
+  }
+  .card p {
+    font-size: 0.85rem;
+    color: #8f9bc2;
+    margin-bottom: 12px;
+    min-height: 36px;
+  }
+  .rec-badge {
     display: inline-block;
-    background: rgba(181, 55, 242, 0.18);
+    background: rgba(181, 55, 242, 0.2);
     border: 1px solid #b537f2;
-    color: #e0aaff;
+    color: #e2b0ff;
     font-size: 0.85rem;
     padding: 4px 12px;
     border-radius: 12px;
-    font-weight: 600;
+    font-weight: 700;
   }
-  #game-screen {
+
+  #game-view {
     display: none;
     flex-direction: column;
     align-items: center;
@@ -121,19 +144,25 @@
     max-width: 700px;
     padding: 20px;
   }
-  .stage-header {
+  .game-top {
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 14px;
-    background: #141829;
+    background: #14192d;
     padding: 12px 18px;
     border-radius: 14px;
-    border: 1px solid rgba(255,255,255,0.12);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    gap: 10px;
+    flex-wrap: wrap;
   }
-  .score-box { font-size: 1.1rem; font-weight: 700; color: #ffe600; }
-  #canvas-wrapper {
+  .score-label {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #ffe600;
+  }
+  .stage-box {
     background: #070911;
     border: 2px solid #00f3ff;
     border-radius: 14px;
@@ -142,163 +171,224 @@
     justify-content: center;
     align-items: center;
   }
-  canvas { display: block; max-width: 100%; touch-action: none; }
-  #html-board { display: none; padding: 16px; }
-  .hint-text { margin-top: 12px; color: #8a94b8; font-size: 0.9rem; text-align: center; }
-  .mobile-controls {
+  canvas {
+    display: block;
+    max-width: 100%;
+    touch-action: none;
+  }
+  #dom-game {
+    display: none;
+    padding: 16px;
+  }
+  .hint {
+    margin-top: 12px;
+    color: #8f9bc2;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+  .dpad {
     display: none;
     margin-top: 14px;
     gap: 10px;
     flex-wrap: wrap;
     justify-content: center;
   }
-  .mobile-controls button { padding: 14px 20px; font-size: 1.2rem; border-color: #00f3ff; }
-  @media (max-width: 768px) { .mobile-controls.active { display: flex; } }
-  .grid-2048 { display: grid; grid-template-columns: repeat(4, 72px); gap: 8px; background: #141829; padding: 10px; border-radius: 12px; }
-  .cell-2048 { width: 72px; height: 72px; background: #1e243d; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 800; }
-  .grid-mine { display: grid; grid-template-columns: repeat(10, 32px); gap: 3px; }
-  .cell-mine { width: 32px; height: 32px; background: #1e243d; border: 1px solid rgba(0,243,255,0.25); border-radius: 5px; display: flex; align-items: center; justify-content: center; font-weight: 800; cursor: pointer; }
-  .cell-mine.open { background: #0e1220; border-color: rgba(255,255,255,0.08); cursor: default; }
-  .cell-mine.flag { background: rgba(255,0,127,0.2); color: #ff007f; }
+  .dpad button {
+    padding: 14px 20px;
+    font-size: 1.2rem;
+    border-color: #00f3ff;
+  }
+  @media (max-width: 768px) {
+    .dpad.show { display: flex; }
+  }
+
+  .board-2048 {
+    display: grid;
+    grid-template-columns: repeat(4, 72px);
+    gap: 8px;
+    background: #14192d;
+    padding: 10px;
+    border-radius: 12px;
+  }
+  .tile-2048 {
+    width: 72px;
+    height: 72px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: 800;
+  }
+  .board-mine {
+    display: grid;
+    grid-template-columns: repeat(10, 32px);
+    gap: 3px;
+  }
+  .tile-mine {
+    width: 32px;
+    height: 32px;
+    background: #1e2542;
+    border: 1px solid rgba(0, 243, 255, 0.25);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  .tile-mine.open {
+    background: #0d1121;
+    border-color: rgba(255, 255, 255, 0.08);
+    cursor: default;
+  }
+  .tile-mine.flag {
+    background: rgba(255, 0, 127, 0.22);
+    color: #ff007f;
+  }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo" id="btn-logo">⚡ NEON ARCADE</div>
-  <div class="controls-bar">
-    <span class="user-pill">👤 Общий профиль</span>
-    <span class="badge">💎 Баллы: <span id="display-points">0</span></span>
-    <button type="button" id="btn-sound">🔊 Звук: ВКЛ</button>
-    <button type="button" class="danger" id="btn-reset">Сброс</button>
+  <div class="logo" id="nav-logo">⚡ NEON ARCADE</div>
+  <div class="top-bar">
+    <span class="pill">👤 Общий профиль</span>
+    <span class="points-pill">💎 Баллы: <span id="ui-points">0</span></span>
+    <button type="button" id="nav-sound">🔊 Звук: ВКЛ</button>
+    <button type="button" class="danger" id="nav-reset">Сброс</button>
   </div>
 </header>
 
-<div id="menu-screen">
-  <div class="menu-title">
+<div id="menu-view">
+  <div class="hero">
     <h1>Выберите мини-игру</h1>
     <p>1 очко нового рекорда в любой игре = +1 балл в общий профиль</p>
   </div>
-  <div class="games-grid">
-    <div class="game-card" data-game="snake">
-      <span class="game-icon">🐍</span>
+  <div class="grid">
+    <div class="card" data-id="snake">
+      <span class="card-icon">🐍</span>
       <h3>Змейка</h3>
-      <p class="desc">Прохождение сквозь стены. Собирайте энергию!</p>
-      <span class="record-tag">Рекорд: <b id="rec-snake">0</b></span>
+      <p>Прохождение сквозь стены. Собирайте энергию!</p>
+      <span class="rec-badge">Рекорд: <b id="rec-snake">0</b></span>
     </div>
-    <div class="game-card" data-game="tetris">
-      <span class="game-icon">🧱</span>
+    <div class="card" data-id="tetris">
+      <span class="card-icon">🧱</span>
       <h3>Тетрис</h3>
-      <p class="desc">Классическая укладка неоновых блоков.</p>
-      <span class="record-tag">Рекорд: <b id="rec-tetris">0</b></span>
+      <p>Классическая укладка неоновых блоков.</p>
+      <span class="rec-badge">Рекорд: <b id="rec-tetris">0</b></span>
     </div>
-    <div class="game-card" data-game="arkanoid">
-      <span class="game-icon">🏓</span>
+    <div class="card" data-id="arkanoid">
+      <span class="card-icon">🏓</span>
       <h3>Арканоид</h3>
-      <p class="desc">Плавный темп. Двигайте платформу мышкой!</p>
-      <span class="record-tag">Рекорд: <b id="rec-arkanoid">0</b></span>
+      <p>Плавный темп. Двигайте платформу мышкой!</p>
+      <span class="rec-badge">Рекорд: <b id="rec-arkanoid">0</b></span>
     </div>
-    <div class="game-card" data-game="flappy">
-      <span class="game-icon">🐤</span>
+    <div class="card" data-id="flappy">
+      <span class="card-icon">🐤</span>
       <h3>Flappy Bird</h3>
-      <p class="desc">Размеренный полет между неоновыми трубами.</p>
-      <span class="record-tag">Рекорд: <b id="rec-flappy">0</b></span>
+      <p>Размеренный полет между неоновыми трубами.</p>
+      <span class="rec-badge">Рекорд: <b id="rec-flappy">0</b></span>
     </div>
-    <div class="game-card" data-game="shooter">
-      <span class="game-icon">🚀</span>
+    <div class="card" data-id="shooter">
+      <span class="card-icon">🚀</span>
       <h3>Космошутер</h3>
-      <p class="desc">Спокойная оборона галактики от захватчиков.</p>
-      <span class="record-tag">Рекорд: <b id="rec-shooter">0</b></span>
+      <p>Спокойная оборона галактики от захватчиков.</p>
+      <span class="rec-badge">Рекорд: <b id="rec-shooter">0</b></span>
     </div>
-    <div class="game-card" data-game="pong">
-      <span class="game-icon">🎾</span>
+    <div class="card" data-id="pong">
+      <span class="card-icon">🎾</span>
       <h3>Пинг-Понг</h3>
-      <p class="desc">Дуэль против ИИ. Управление курсором мыши!</p>
-      <span class="record-tag">Рекорд: <b id="rec-pong">0</b></span>
+      <p>Дуэль против ИИ. Управление курсором мыши!</p>
+      <span class="rec-badge">Рекорд: <b id="rec-pong">0</b></span>
     </div>
-    <div class="game-card" data-game="g2048">
-      <span class="game-icon">🔢</span>
+    <div class="card" data-id="g2048">
+      <span class="card-icon">🔢</span>
       <h3>2048</h3>
-      <p class="desc">Соединяйте плитки и наберите максимум очков.</p>
-      <span class="record-tag">Рекорд: <b id="rec-g2048">0</b></span>
+      <p>Соединяйте плитки и наберите максимум очков.</p>
+      <span class="rec-badge">Рекорд: <b id="rec-g2048">0</b></span>
     </div>
-    <div class="game-card" data-game="mines">
-      <span class="game-icon">💣</span>
+    <div class="card" data-id="mines">
+      <span class="card-icon">💣</span>
       <h3>Сапер</h3>
-      <p class="desc">Разминируйте поле и получайте очки за клетки.</p>
-      <span class="record-tag">Рекорд: <b id="rec-mines">0</b></span>
+      <p>Разминируйте поле и получайте очки за клетки.</p>
+      <span class="rec-badge">Рекорд: <b id="rec-mines">0</b></span>
     </div>
   </div>
 </div>
 
-<div id="game-screen">
-  <div class="stage-header">
-    <button type="button" id="btn-back">⬅ В меню</button>
-    <strong id="active-game-title">Игра</strong>
-    <div class="score-box">Счёт: <span id="current-score">0</span> | Рекорд: <span id="best-score">0</span></div>
+<div id="game-view">
+  <div class="game-top">
+    <button type="button" id="nav-back">⬅ В меню</button>
+    <strong id="ui-game-title">Игра</strong>
+    <div class="score-label">Счёт: <span id="ui-score">0</span> | Рекорд: <span id="ui-best">0</span></div>
   </div>
-  <div id="canvas-wrapper">
-    <canvas id="game-canvas" width="480" height="520"></canvas>
-    <div id="html-board"></div>
+  <div class="stage-box">
+    <canvas id="stage-canvas" width="480" height="500"></canvas>
+    <div id="dom-game"></div>
   </div>
-  <div class="hint-text" id="game-hint"></div>
-  <div class="mobile-controls" id="mobile-controls">
-    <button type="button" data-key="ArrowLeft">◀</button>
-    <button type="button" data-key="ArrowUp">▲</button>
-    <button type="button" data-key="ArrowDown">▼</button>
-    <button type="button" data-key="ArrowRight">▶</button>
-    <button type="button" data-key=" ">●</button>
+  <div class="hint" id="ui-hint"></div>
+  <div class="dpad" id="ui-dpad">
+    <button type="button" data-k="ArrowLeft">◀</button>
+    <button type="button" data-k="ArrowUp">▲</button>
+    <button type="button" data-k="ArrowDown">▼</button>
+    <button type="button" data-k="ArrowRight">▶</button>
+    <button type="button" data-k=" ">●</button>
   </div>
 </div>
 
 <script>
-(function() {
-  var PROFILE_KEY = 'neon_arcade_profile_v5';
-  var profile = { points: 0, records: {} };
+window.addEventListener('DOMContentLoaded', function() {
+  var STORE_KEY = 'neon_arcade_clean_v1';
+  var state = { points: 0, records: {} };
 
   try {
-    var raw = localStorage.getItem(PROFILE_KEY);
-    if (raw) {
-      var data = JSON.parse(raw);
-      if (data && typeof data.points === 'number') profile = data;
+    var saved = localStorage.getItem(STORE_KEY);
+    if (saved) {
+      var obj = JSON.parse(saved);
+      if (obj && typeof obj.points === 'number') state = obj;
     }
   } catch (e) {}
 
-  function saveProfile() {
-    try { localStorage.setItem(PROFILE_KEY, JSON.stringify(profile)); } catch (e) {}
+  function saveState() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
   }
 
-  function updateStatsUI() {
-    document.getElementById('display-points').textContent = profile.points;
-    var ids = ['snake', 'tetris', 'arkanoid', 'flappy', 'shooter', 'pong', 'g2048', 'mines'];
-    for (var i = 0; i < ids.length; i++) {
-      var el = document.getElementById('rec-' + ids[i]);
-      if (el) el.textContent = profile.records[ids[i]] || 0;
+  function refreshUI() {
+    document.getElementById('ui-points').textContent = state.points;
+    var list = 'snake,tetris,arkanoid,flappy,shooter,pong,g2048,mines'.split(',');
+    for (var i = 0; i < list.length; i++) {
+      var id = list.at(i);
+      var node = document.getElementById('rec-' + id);
+      if (node) node.textContent = state.records[id] || 0;
     }
   }
 
-  function registerScore(gameId, score) {
-    document.getElementById('current-score').textContent = score;
-    var prev = profile.records[gameId] || 0;
-    if (score > prev) {
-      profile.points += (score - prev);
-      profile.records[gameId] = score;
-      saveProfile();
-      updateStatsUI();
-      document.getElementById('best-score').textContent = score;
+  function addScore(id, val) {
+    document.getElementById('ui-score').textContent = val;
+    var old = state.records[id] || 0;
+    if (val > old) {
+      state.points += (val - old);
+      state.records[id] = val;
+      saveState();
+      refreshUI();
+      document.getElementById('ui-best').textContent = val;
     }
   }
 
-  var soundEnabled = true;
-  var audioCtx = null;
+  // Звук
+  var soundOn = true;
+  var actx = null;
 
-  function playTone(freq, type, duration, vol) {
-    if (!soundEnabled) return;
+  function beep(freq, type, dur, vol) {
+    if (!soundOn) return;
     try {
-      if (!audioCtx) {
-        var AC = window.AudioContext || window.webkitAudioContext;
-        if (AC) audioCtx = new AC();
+      if (!actx) {
+        var Ctx = window.AudioContext || window.webkitAudioContext;
+        if (Ctx) actx = new Ctx();
       }
-      if (!audioCtx) return;
+      if (!actx) return;
+      if (actx.state === 'suspended') actx.resume();
+      var o = actx.createOscillator();
 
    
