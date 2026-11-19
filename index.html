@@ -91,7 +91,6 @@
     color: var(--neon-pink);
   }
 
-  /* Main Menu Grid */
   #menu-screen {
     width: 100%;
     max-width: 1100px;
@@ -135,7 +134,6 @@
     font-weight: 600;
   }
 
-  /* Game Stage */
   #game-screen {
     display: none;
     flex-direction: column;
@@ -261,24 +259,20 @@
 </div>
 
 <script>
-// ================= 1. ОБЩИЙ ПРОФИЛЬ И СОХРАНЕНИЕ =================
-var PROFILE_KEY = 'neon_arcade_shared_profile_v1';
+// ================= 1. ОБЩИЙ ПРОФИЛЬ =================
+var PROFILE_KEY = 'neon_arcade_open_v1';
 var profile = { points: 0, records: {} };
 
 try {
-  var saved = localStorage.getItem(PROFILE_KEY);
-  if (saved) {
-    var parsed = JSON.parse(saved);
-    if (parsed && typeof parsed.points === 'number') {
-      profile = parsed;
-    }
+  var raw = localStorage.getItem(PROFILE_KEY);
+  if (raw) {
+    var data = JSON.parse(raw);
+    if (data && typeof data.points === 'number') profile = data;
   }
 } catch (e) {}
 
 function saveProfile() {
-  try {
-    localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
-  } catch (e) {}
+  try { localStorage.setItem(PROFILE_KEY, JSON.stringify(profile)); } catch (e) {}
 }
 
 function updateHeaderStats() {
@@ -287,9 +281,9 @@ function updateHeaderStats() {
 
 function registerScore(gameId, score) {
   document.getElementById('current-score').textContent = score;
-  var prevBest = profile.records[gameId] || 0;
-  if (score > prevBest) {
-    profile.points += (score - prevBest);
+  var prev = profile.records[gameId] || 0;
+  if (score > prev) {
+    profile.points += (score - prev);
     profile.records[gameId] = score;
     saveProfile();
     updateHeaderStats();
@@ -298,7 +292,7 @@ function registerScore(gameId, score) {
 }
 
 function resetProgress() {
-  if (confirm('Сбросить все баллы и рекорды общего профиля?')) {
+  if (confirm('Сбросить все баллы и рекорды?')) {
     profile = { points: 0, records: {} };
     saveProfile();
     updateHeaderStats();
@@ -306,7 +300,7 @@ function resetProgress() {
   }
 }
 
-// ================= 2. ЗВУКОВОЙ ДВИЖОК =================
+// ================= 2. ЗВУК =================
 var soundEnabled = true;
 var audioCtx = null;
 
@@ -341,3 +335,5 @@ var sfx = {
   jump: function() { playTone(420, 'square', 0.12, 0.1); },
   score: function() { playTone(600, 'sine', 0.08, 0.12); setTimeout(function() { playTone(850, 'sine', 0.12, 0.12); }, 70); },
   hit: function() { playTone(260, 'triangle', 0.08, 0.12); },
+  shoot: function() { playTone(750, 'sawtooth', 0.07, 0.08); },
+  boom: function() { playTone(110, 'sawtooth', 0.25, 0.16); },
