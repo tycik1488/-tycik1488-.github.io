@@ -73,7 +73,6 @@
     border-color: #ff007f;
     color: #ff007f;
   }
-
   #menu-screen {
     width: 100%;
     max-width: 1100px;
@@ -114,7 +113,6 @@
     border-radius: 12px;
     font-weight: 600;
   }
-
   #game-screen {
     display: none;
     flex-direction: column;
@@ -147,7 +145,6 @@
   canvas { display: block; max-width: 100%; touch-action: none; }
   #html-board { display: none; padding: 16px; }
   .hint-text { margin-top: 12px; color: #8a94b8; font-size: 0.9rem; text-align: center; }
-
   .mobile-controls {
     display: none;
     margin-top: 14px;
@@ -157,7 +154,6 @@
   }
   .mobile-controls button { padding: 14px 20px; font-size: 1.2rem; border-color: #00f3ff; }
   @media (max-width: 768px) { .mobile-controls.active { display: flex; } }
-
   .grid-2048 { display: grid; grid-template-columns: repeat(4, 72px); gap: 8px; background: #141829; padding: 10px; border-radius: 12px; }
   .cell-2048 { width: 72px; height: 72px; background: #1e243d; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 800; }
   .grid-mine { display: grid; grid-template-columns: repeat(10, 32px); gap: 3px; }
@@ -169,12 +165,12 @@
 <body>
 
 <header>
-  <div class="logo" onclick="goMenu()">⚡ NEON ARCADE</div>
+  <div class="logo" id="btn-logo">⚡ NEON ARCADE</div>
   <div class="controls-bar">
     <span class="user-pill">👤 Общий профиль</span>
     <span class="badge">💎 Баллы: <span id="display-points">0</span></span>
-    <button type="button" id="sound-btn" onclick="toggleSound()">🔊 Звук: ВКЛ</button>
-    <button type="button" class="danger" onclick="resetProgress()">Сброс</button>
+    <button type="button" id="btn-sound">🔊 Звук: ВКЛ</button>
+    <button type="button" class="danger" id="btn-reset">Сброс</button>
   </div>
 </header>
 
@@ -184,49 +180,49 @@
     <p>1 очко нового рекорда в любой игре = +1 балл в общий профиль</p>
   </div>
   <div class="games-grid">
-    <div class="game-card" onclick="launchGame('snake')">
+    <div class="game-card" data-game="snake">
       <span class="game-icon">🐍</span>
       <h3>Змейка</h3>
       <p class="desc">Прохождение сквозь стены. Собирайте энергию!</p>
       <span class="record-tag">Рекорд: <b id="rec-snake">0</b></span>
     </div>
-    <div class="game-card" onclick="launchGame('tetris')">
+    <div class="game-card" data-game="tetris">
       <span class="game-icon">🧱</span>
       <h3>Тетрис</h3>
       <p class="desc">Классическая укладка неоновых блоков.</p>
       <span class="record-tag">Рекорд: <b id="rec-tetris">0</b></span>
     </div>
-    <div class="game-card" onclick="launchGame('arkanoid')">
+    <div class="game-card" data-game="arkanoid">
       <span class="game-icon">🏓</span>
       <h3>Арканоид</h3>
       <p class="desc">Плавный темп. Двигайте платформу мышкой!</p>
       <span class="record-tag">Рекорд: <b id="rec-arkanoid">0</b></span>
     </div>
-    <div class="game-card" onclick="launchGame('flappy')">
+    <div class="game-card" data-game="flappy">
       <span class="game-icon">🐤</span>
       <h3>Flappy Bird</h3>
       <p class="desc">Размеренный полет между неоновыми трубами.</p>
       <span class="record-tag">Рекорд: <b id="rec-flappy">0</b></span>
     </div>
-    <div class="game-card" onclick="launchGame('shooter')">
+    <div class="game-card" data-game="shooter">
       <span class="game-icon">🚀</span>
       <h3>Космошутер</h3>
       <p class="desc">Спокойная оборона галактики от захватчиков.</p>
       <span class="record-tag">Рекорд: <b id="rec-shooter">0</b></span>
     </div>
-    <div class="game-card" onclick="launchGame('pong')">
+    <div class="game-card" data-game="pong">
       <span class="game-icon">🎾</span>
       <h3>Пинг-Понг</h3>
       <p class="desc">Дуэль против ИИ. Управление курсором мыши!</p>
       <span class="record-tag">Рекорд: <b id="rec-pong">0</b></span>
     </div>
-    <div class="game-card" onclick="launchGame('g2048')">
+    <div class="game-card" data-game="g2048">
       <span class="game-icon">🔢</span>
       <h3>2048</h3>
       <p class="desc">Соединяйте плитки и наберите максимум очков.</p>
       <span class="record-tag">Рекорд: <b id="rec-g2048">0</b></span>
     </div>
-    <div class="game-card" onclick="launchGame('mines')">
+    <div class="game-card" data-game="mines">
       <span class="game-icon">💣</span>
       <h3>Сапер</h3>
       <p class="desc">Разминируйте поле и получайте очки за клетки.</p>
@@ -237,7 +233,7 @@
 
 <div id="game-screen">
   <div class="stage-header">
-    <button type="button" onclick="goMenu()">⬅ В меню</button>
+    <button type="button" id="btn-back">⬅ В меню</button>
     <strong id="active-game-title">Игра</strong>
     <div class="score-box">Счёт: <span id="current-score">0</span> | Рекорд: <span id="best-score">0</span></div>
   </div>
@@ -247,60 +243,62 @@
   </div>
   <div class="hint-text" id="game-hint"></div>
   <div class="mobile-controls" id="mobile-controls">
-    <button type="button" onclick="sendKey('ArrowLeft')">◀</button>
-    <button type="button" onclick="sendKey('ArrowUp')">▲</button>
-    <button type="button" onclick="sendKey('ArrowDown')">▼</button>
-    <button type="button" onclick="sendKey('ArrowRight')">▶</button>
-    <button type="button" onclick="sendKey(' ')">●</button>
+    <button type="button" data-key="ArrowLeft">◀</button>
+    <button type="button" data-key="ArrowUp">▲</button>
+    <button type="button" data-key="ArrowDown">▼</button>
+    <button type="button" data-key="ArrowRight">▶</button>
+    <button type="button" data-key=" ">●</button>
   </div>
 </div>
 
 <script>
-var PROFILE_KEY = 'neon_arcade_open_v2';
-var profile = { points: 0, records: {} };
+(function() {
+  var PROFILE_KEY = 'neon_arcade_profile_v5';
+  var profile = { points: 0, records: {} };
 
-try {
-  var raw = localStorage.getItem(PROFILE_KEY);
-  if (raw) {
-    var data = JSON.parse(raw);
-    if (data && typeof data.points === 'number') profile = data;
+  try {
+    var raw = localStorage.getItem(PROFILE_KEY);
+    if (raw) {
+      var data = JSON.parse(raw);
+      if (data && typeof data.points === 'number') profile = data;
+    }
+  } catch (e) {}
+
+  function saveProfile() {
+    try { localStorage.setItem(PROFILE_KEY, JSON.stringify(profile)); } catch (e) {}
   }
-} catch (e) {}
 
-function saveProfile() {
-  try { localStorage.setItem(PROFILE_KEY, JSON.stringify(profile)); } catch (e) {}
-}
-
-function updateStatsUI() {
-  document.getElementById('display-points').textContent = profile.points;
-  var ids = ['snake', 'tetris', 'arkanoid', 'flappy', 'shooter', 'pong', 'g2048', 'mines'];
-  for (var i = 0; i < ids.length; i++) {
-    var el = document.getElementById('rec-' + ids[i]);
-    if (el) el.textContent = profile.records[ids[i]] || 0;
+  function updateStatsUI() {
+    document.getElementById('display-points').textContent = profile.points;
+    var ids = ['snake', 'tetris', 'arkanoid', 'flappy', 'shooter', 'pong', 'g2048', 'mines'];
+    for (var i = 0; i < ids.length; i++) {
+      var el = document.getElementById('rec-' + ids[i]);
+      if (el) el.textContent = profile.records[ids[i]] || 0;
+    }
   }
-}
 
-function registerScore(gameId, score) {
-  document.getElementById('current-score').textContent = score;
-  var prev = profile.records[gameId] || 0;
-  if (score > prev) {
-    profile.points += (score - prev);
-    profile.records[gameId] = score;
-    saveProfile();
-    updateStatsUI();
-    document.getElementById('best-score').textContent = score;
+  function registerScore(gameId, score) {
+    document.getElementById('current-score').textContent = score;
+    var prev = profile.records[gameId] || 0;
+    if (score > prev) {
+      profile.points += (score - prev);
+      profile.records[gameId] = score;
+      saveProfile();
+      updateStatsUI();
+      document.getElementById('best-score').textContent = score;
+    }
   }
-}
 
-function resetProgress() {
-  if (confirm('Сбросить все баллы и рекорды?')) {
-    profile = { points: 0, records: {} };
-    saveProfile();
-    updateStatsUI();
-  }
-}
+  var soundEnabled = true;
+  var audioCtx = null;
 
-// Звук
-var soundEnabled = true;
-var audioCtx = null;
+  function playTone(freq, type, duration, vol) {
+    if (!soundEnabled) return;
+    try {
+      if (!audioCtx) {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) audioCtx = new AC();
+      }
+      if (!audioCtx) return;
 
+   
