@@ -44,7 +44,6 @@
     background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
     cursor: pointer;
   }
   .controls-bar {
@@ -61,7 +60,6 @@
     border-radius: 20px;
     font-weight: 700;
     font-size: 0.95rem;
-    box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
   }
   .user-pill {
     background: rgba(0, 243, 255, 0.12);
@@ -85,7 +83,6 @@
   button:hover {
     border-color: var(--neon-blue);
     box-shadow: 0 0 12px rgba(0, 243, 255, 0.4);
-    transform: translateY(-1px);
   }
   button.primary {
     background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
@@ -98,7 +95,6 @@
     color: var(--neon-pink);
   }
 
-  /* Auth Screen */
   #auth-screen {
     margin: auto;
     background: var(--card);
@@ -128,7 +124,6 @@
   .input-group input:focus { border-color: var(--neon-blue); }
   #auth-error { color: var(--neon-pink); font-size: 0.85rem; margin-bottom: 12px; min-height: 18px; }
 
-  /* Main Menu Grid */
   #menu-screen {
     width: 100%;
     max-width: 1100px;
@@ -151,8 +146,6 @@
     text-align: center;
     cursor: pointer;
     transition: all 0.25s;
-    position: relative;
-    overflow: hidden;
   }
   .game-card:hover {
     background: var(--card-hover);
@@ -174,7 +167,6 @@
     font-weight: 600;
   }
 
-  /* Game Stage */
   #game-screen {
     display: none;
     flex-direction: column;
@@ -210,7 +202,6 @@
   #html-board { display: none; padding: 16px; }
   .hint-text { margin-top: 12px; color: var(--muted); font-size: 0.9rem; text-align: center; }
 
-  /* Mobile D-Pad */
   .mobile-controls {
     display: none;
     margin-top: 14px;
@@ -228,7 +219,6 @@
     .mobile-controls.active { display: flex; }
   }
 
-  /* 2048 & Minesweeper Grids */
   .grid-2048 {
     display: grid;
     grid-template-columns: repeat(4, 72px);
@@ -273,25 +263,21 @@
   </div>
 </header>
 
-<!-- Экран авторизации -->
 <div id="auth-screen">
   <h2>Вход в портал</h2>
   <p>Введите логин и пароль. Новый аккаунт создастся автоматически, а весь прогресс сохранится в браузере навсегда.</p>
-  <form id="auth-form">
-    <div class="input-group">
-      <label for="login-input">Логин</label>
-      <input type="text" id="login-input" placeholder="Например: CyberPlayer" autocomplete="off">
-    </div>
-    <div class="input-group">
-      <label for="pass-input">Пароль</label>
-      <input type="password" id="pass-input" placeholder="Введите пароль">
-    </div>
-    <div id="auth-error"></div>
-    <button type="submit" id="auth-submit-btn" class="primary" style="width:100%; padding:12px;">Войти / Создать профиль</button>
-  </form>
+  <div class="input-group">
+    <label for="login-input">Логин</label>
+    <input type="text" id="login-input" placeholder="Например: CyberPlayer" autocomplete="off">
+  </div>
+  <div class="input-group">
+    <label for="pass-input">Пароль</label>
+    <input type="password" id="pass-input" placeholder="Введите пароль">
+  </div>
+  <div id="auth-error"></div>
+  <button type="button" id="auth-submit-btn" class="primary" style="width:100%; padding:12px;">Войти / Создать профиль</button>
 </div>
 
-<!-- Главное меню -->
 <div id="menu-screen">
   <div class="menu-title">
     <h1>Выберите мини-игру</h1>
@@ -300,7 +286,6 @@
   <div class="games-grid" id="games-grid"></div>
 </div>
 
-<!-- Игровая сцена -->
 <div id="game-screen">
   <div class="stage-header">
     <button type="button" id="back-menu-btn">⬅ В меню</button>
@@ -313,26 +298,37 @@
   </div>
   <div class="hint-text" id="game-hint"></div>
   <div class="mobile-controls" id="mobile-controls">
-    <button type="button" onclick="sendKey('ArrowLeft')">◀</button>
-    <button type="button" onclick="sendKey('ArrowUp')">▲</button>
-    <button type="button" onclick="sendKey('ArrowDown')">▼</button>
-    <button type="button" onclick="sendKey('ArrowRight')">▶</button>
-    <button type="button" onclick="sendKey(' ')">●</button>
+    <button type="button" id="m-left">◀</button>
+    <button type="button" id="m-up">▲</button>
+    <button type="button" id="m-down">▼</button>
+    <button type="button" id="m-right">▶</button>
+    <button type="button" id="m-act">●</button>
   </div>
 </div>
 
 <script>
-// ================= БЕЗОПАСНОЕ ХРАНИЛИЩЕ =================
+// ================= 1. ХРАНИЛИЩЕ И АККАУНТЫ =================
 const SafeStorage = {
   mem: {},
-  get(key) {
-    try { return window.localStorage.getItem(key); }
-    catch (e) { return this.mem[key] || null; }
-  },
-  set(key, val) {
-    try { window.localStorage.setItem(key, val); }
-    catch (e) { this.mem[key] = val; }
-  },
-  remove(key) {
+  get(k) { try { return localStorage.getItem(k); } catch (e) { return this.mem[k] || null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) { this.mem[k] = v; } },
+  del(k) { try { localStorage.removeItem(k); } catch (e) { delete this.mem[k]; } }
+};
 
+const DB_KEY = 'neon_arcade_db_v4';
+const SESS_KEY = 'neon_arcade_sess_v4';
+let usersDB = {};
+try { usersDB = JSON.parse(SafeStorage.get(DB_KEY) || '{}'); } catch (e) { usersDB = {}; }
+let currentUser = null;
+
+function saveDB() {
+  SafeStorage.set(DB_KEY, JSON.stringify(usersDB));
+}
+
+function handleAuth() {
+  const login = document.getElementById('login-input').value.trim();
+  const pass = document.getElementById('pass-input').value.trim();
+  const err = document.getElementById('auth-error');
+
+  if (!login || !pass) {
 
